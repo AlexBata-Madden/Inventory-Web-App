@@ -1,0 +1,124 @@
+{% extends "base.html" %} 
+{% block content%}
+<div class="container pt-5 pb-3">
+   <table class="table table-hover table-info">
+      <tr>
+         {% for header in headings %}
+         <th>{{ header }}</th>
+         {% endfor %}
+      </tr>
+      {% for row in data %}
+      {% if row.deleted == false %}
+      <tr>
+         <td>{{ row.name }}</td>
+         <td>{{ row.product_code }}</td>
+         <td>{{ row.quantity }}</td>
+         <td>{{ row.description }}</td>
+         <td>
+            <button type="button" class="btn btn-warning btn-xs" data-bs-toggle="modal" data-bs-target="#modaledit{{row.id}}">
+            Edit
+            </button>    
+            <button type="button" class="btn btn-danger btn-xs" data-bs-toggle="modal" data-bs-target="#modaldelete{{row.id}}">
+            Delete
+            </button>  
+         </td>
+      </tr>
+      {% endif %}
+      <div id="modaledit{{row.id}}" class="modal fade" role="dialog">
+         <div class="modal-dialog">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h4 class="modal-title">Edit Item</h4>
+               </div>
+               <div class="modal-body">
+                  <form action="{{url_for('update')}}" method="POST">
+                     <div class="form-group">
+                        <label>Item Name:</label>
+                        <input type="hidden"  name="id" value="{{row.id}}">
+                        <input type="text" class="form-control" name="name" required="1" value="{{row.name}}">
+                     </div>
+                     <div class="form-group">
+                        <label>Item Product Code:</label>
+                        <input type="text" class="form-control" name="code" required="1" value="{{row.product_code}}">
+                     </div>
+                     <div class="form-group">
+                        <label>Item Quantity:</label>
+                        <input type="number" class="form-control" name="quantity" required="1" value="{{row.quantity}}">
+                     </div>
+                     <div class="form-group">
+                        <label>Item Description:</label>
+                        <input type="text" class="form-control" name="desc" required="1" value="{{row.description}}">
+                     </div>
+                     <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Update</button>
+                     </div>
+                  </form>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div id="modaldelete{{row.id}}" class="modal fade" role="dialog">
+         <div class="modal-dialog">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h4 class="modal-title">Delete Item</h4>
+               </div>
+               <div class="modal-body">
+                  <form action="{{url_for('delete')}}" method="POST">
+                     <div class="form-group">
+                        <label>Deletion Comment:</label>
+                        <input type="hidden"  name="id" value="{{row.id}}">
+                        <input type="text" class="form-control" name="del_com" required="1" value="{{row.deletion_comment}}">
+                     </div>
+                     <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Delete</button>
+                     </div>
+                  </form>
+               </div>
+            </div>
+         </div>
+      </div>
+      {% endfor %}
+   </table>
+</div>
+<div id="myModal" class="modal fade" role="dialog">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h4 class="modal-title">Add Item</h4>
+         </div>
+         <div class="modal-body">
+            <form action="{{url_for('insert')}}" method="POST" id="formid">
+               <div class="form-group">
+                  <label>Item Name:</label>
+                  <input type="text" class="form-control" name="name" required="1">
+               </div>
+               <div class="form-group">
+                  <label>Item Product Code:</label>
+                  <input type="text" class="form-control" name="code" required="1">
+               </div>
+               <div class="form-group">
+                  <label>Item Quantity:</label>
+                  <input type="number" class="form-control" name="quantity" required="1">
+               </div>
+               <div class="form-group">
+                  <label>Item Description:</label>
+                  <input type="text" class="form-control" name="desc" required="1">
+               </div>
+               <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-primary">Add Item</button>
+               </div>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="container">
+   <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
+   Add item
+   </button>      
+</div>
+{% endblock %}

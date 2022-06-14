@@ -1,0 +1,49 @@
+{% extends "base.html" %} 
+{% block content%}
+<div class="container pt-5 pb-3">
+   <table class="table table-hover table-danger">
+      <tr>
+         {% for header in headings %}
+         <th>{{ header }}</th>
+         {% endfor %}
+      </tr>
+      {% for row in data %}
+      {% if row.deleted == true %}
+      <tr>
+         <td>{{ row.name }}</td>
+         <td>{{ row.product_code }}</td>
+         <td>{{ row.quantity }}</td>
+         <td>{{ row.description }}</td>
+         <td>{{ row.deletion_comment }}</td>
+         <td>
+            <button type="button" class="btn btn-danger btn-xs" data-bs-toggle="modal" data-bs-target="#modalundelete{{row.id}}">
+            Undelete
+            </button>  
+         </td>
+      </tr>
+      {% endif %}
+      <div id="modalundelete{{row.id}}" class="modal fade" role="dialog">
+         <div class="modal-dialog">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h4 class="modal-title">Delete Item</h4>
+               </div>
+               <div class="modal-body">
+                  <form action="{{url_for('deleted')}}" method="POST">
+                     <div class="form-group">
+                        <label>Confirm undeletion</label>
+                        <input type="hidden"  name="id" value="{{row.id}}">
+                     </div>
+                     <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Undelete</button>
+                     </div>
+                  </form>
+               </div>
+            </div>
+         </div>
+      </div>
+      {% endfor %}
+   </table>
+</div>
+{% endblock %}
